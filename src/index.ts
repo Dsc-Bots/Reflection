@@ -1,4 +1,4 @@
-export * from "./app/index";
+export * from "./lib/index";
 export * from "./types";
-import { HandlerClient } from "./Client";
-export default HandlerClient;
+export { HandlerClient } from "./Client";
+

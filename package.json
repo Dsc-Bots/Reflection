@@ -3,7 +3,6 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "./dist/index.js",
-	"type": "commonjs",
 	"scripts": {
 		"lint": "rome format ./src --write",
 		"check": "rome check ./src --apply",
@@ -22,8 +21,7 @@
 	},
 	"homepage": "https://github.com/Dsc-Bots/Reflection#readme",
 	"dependencies": {
-		"discord.js": "^14.8.0",
-		"dotenv": "^16.0.3"
+		"discord.js": "^14.8.0"
 	},
 	"devDependencies": {
 		"@swc/cli": "^0.1.62",

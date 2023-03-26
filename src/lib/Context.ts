@@ -1,15 +1,29 @@
 import { FunctionParams, FunctionReturn, If } from "../types";
-import { Interaction, Guild, ChatInputCommandInteraction, AnySelectMenuInteraction, ButtonInteraction } from "discord.js";
+import {
+	Interaction,
+	Guild,
+	ChatInputCommandInteraction,
+	AnySelectMenuInteraction,
+	ButtonInteraction,
+	AutocompleteInteraction,
+} from "discord.js";
+import { HandlerClient } from "../index";
 
 export class InteractionContext<InteractionType extends Interaction, OnDM extends boolean = boolean> {
 	constructor(public readonly interaction: InteractionType) {}
 
-	get client() {
-		return this.interaction.client;
+	get client(): HandlerClient {
+		return this.interaction.client as HandlerClient;
 	}
 
 	get guild() {
-		return this.interaction.guild as If<OnDM, undefined, Guild>;
+		return this.interaction.guild as If<OnDM, Guild | null, Guild>;
+	}
+}
+
+export class AutoCompleteContext<OnDM extends boolean = boolean> extends InteractionContext<AutocompleteInteraction, OnDM> {
+	respond(...args: FunctionParams<AutocompleteInteraction, "respond">): FunctionReturn<AutocompleteInteraction, "respond"> {
+		return this.interaction.respond(...args);
 	}
 }
 

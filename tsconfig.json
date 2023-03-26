@@ -6,7 +6,6 @@
 		"forceConsistentCasingInFileNames": true,
 		"target": "ESNext",
 		"module": "CommonJS",
-		"moduleResolution": "node16",
 		"declaration": true,
 		"sourceMap": false,
 		"preserveConstEnums": true,
