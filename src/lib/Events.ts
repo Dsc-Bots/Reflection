@@ -8,7 +8,7 @@ export interface DiscordEvent<Event extends keyof ClientEvents = keyof ClientEve
 }
 
 export function createEvent<T extends keyof ClientEvents>(data: DiscordEvent<T>): DiscordEvent<T> {
-	Util.discordEventValidator(data as unknown as DiscordEvent<keyof ClientEvents>, data.name);
+	Util.discordEventValidator(data as unknown as DiscordEvent<keyof ClientEvents>);
 
 	data.type ??= "on";
 

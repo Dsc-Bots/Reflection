@@ -1,7 +1,6 @@
 import { Client, ClientOptions } from "discord.js";
 import { join, resolve } from "node:path";
-//import { DiscordEvent } from "./lib/Events";
-import { ChatInputCommand, DiscordEvent } from "./lib/index";
+import { ChatInputCommand, ComponentStruct, DiscordEvent } from "./lib/index";
 import { HandlingData, HandlerOptions, HandlerInternalOptions } from "./types";
 import { Util } from "./utils";
 
@@ -11,6 +10,7 @@ export class HandlerClient<Ready extends boolean = boolean> extends Client<Ready
 		super(djsoptions);
 		this.hop = { paths, events: [] };
 		this.ChatInputCommands = new Map<string, HandlingData<ChatInputCommand>>();
+		this.components = new Map();
 	}
 
 	hop: HandlerInternalOptions;
@@ -18,6 +18,7 @@ export class HandlerClient<Ready extends boolean = boolean> extends Client<Ready
 	async setup(token: string) {
 		await this.loadEvents(resolve(__dirname, "events"), true);
 		await this.loadChatCommands();
+		await this.loadComponents();
 		await this.loadEvents();
 		await this.login(token);
 	}
@@ -32,6 +33,23 @@ export class HandlerClient<Ready extends boolean = boolean> extends Client<Ready
 		for (const path of files) {
 			const caller = (await import(path)) as ChatInputCommand;
 			this.ChatInputCommands.set(caller.data.name, { path, caller });
+		}
+	}
+
+	private async loadComponents(path?: string) {
+		if (!(path && this.hop.paths.components)) {
+			return;
+		}
+
+		path ??= join(process.cwd(), this.hop.paths.components);
+		if (!path.length) {
+			throw new Error("No se pueden cargar los components sin un path");
+		}
+		const files = await Util.walk(path, ".js");
+
+		for (const path of files) {
+			const caller = (await import(path)) as ComponentStruct;
+			this.components.set(caller.customId, { path, caller });
 		}
 	}
 
@@ -67,5 +85,6 @@ export class HandlerClient<Ready extends boolean = boolean> extends Client<Ready
 declare module "discord.js" {
 	export interface Client {
 		ChatInputCommands: Map<string, HandlingData<ChatInputCommand>>;
+		components: Map<string, HandlingData<ComponentStruct>>;
 	}
 }

@@ -6,14 +6,14 @@ import {
 	AnySelectMenuInteraction,
 	ButtonInteraction,
 	AutocompleteInteraction,
+	MessageComponentInteraction,
 } from "discord.js";
-import { HandlerClient } from "../index";
 
 export class InteractionContext<InteractionType extends Interaction, OnDM extends boolean = boolean> {
 	constructor(public readonly interaction: InteractionType) {}
 
-	get client(): HandlerClient {
-		return this.interaction.client as HandlerClient;
+	get client() {
+		return this.interaction.client;
 	}
 
 	get guild() {
@@ -35,7 +35,10 @@ export class ChatInputCommandContext<OnDM extends boolean = boolean> extends Int
 
 export class ComponentContext<
 	InteractionType extends AnySelectMenuInteraction | ButtonInteraction,
-	OnDM extends boolean = boolean,
-> extends InteractionContext<InteractionType, OnDM> {}
+> extends InteractionContext<InteractionType> {
+	update(...args: FunctionParams<MessageComponentInteraction, "update">): FunctionReturn<MessageComponentInteraction, "reply"> {
+		return this.interaction.update(...args);
+	}
+}
 
-export class ButtonContext<OnDM extends boolean = boolean> extends ComponentContext<ButtonInteraction, OnDM> {}
+export class ButtonContext extends ComponentContext<ButtonInteraction> {}

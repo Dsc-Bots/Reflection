@@ -25,14 +25,14 @@ export function createChatCommand<T extends ChatCommandData>(command: CommandStr
 export function createChatCommand<T extends ChatCommandData>(
 	command: CommandStruct<T> | CommandWithSubStruct<T>,
 ): ChatInputCommand {
-	Util.chatCommandValidator(command, __filename);
+	Util.chatCommandValidator(command);
 
 	return { ...command };
 }
 
 export function createUserCommand<T extends UserCommandData>({ data, execute }: CommandStruct<T>): UserCommand {
 	if (execute.length < 1) {
-		throw new Error(`El comando [${__filename}] tiene menos de 1 argumento en su funcion execute`);
+		throw new Error(`El comando [${data.name}] tiene menos de 1 argumento en su funcion execute`);
 	}
 
 	data.type = ApplicationCommandType.User;
@@ -45,7 +45,7 @@ export function createContextCommand<T extends ContextCommandData>({
 	execute,
 }: Omit<CommandStruct<T>, "onAutoComplete">): ContextMenuCommand {
 	if (execute.length < 1) {
-		throw new Error(`El comando [${__filename}] tiene menos de 1 argumento en su funcion execute`);
+		throw new Error(`El comando [${data.name}}] tiene menos de 1 argumento en su funcion execute`);
 	}
 
 	data.type = ApplicationCommandType.Message;
