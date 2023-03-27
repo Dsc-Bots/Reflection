@@ -8,6 +8,7 @@ export type isFunction<T> = T extends (...args: any) => any ? T : never;
 export type FunctionParams<T, K extends keyof T> = Parameters<isFunction<T[K]>>;
 export type FunctionReturn<T, K extends keyof T> = ReturnType<isFunction<T[K]>>;
 
+
 export interface HandlerInternalOptions {
 	paths: PathConfig;
 	events: HandlingData<DiscordEvent>[];
@@ -15,8 +16,9 @@ export interface HandlerInternalOptions {
 
 export interface PathConfig {
 	chatCommands: string;
-	events: string;
+	events?: string;
 	components?: string;
+	modals?: string;
 }
 
 export type HandlerOptions = Pick<HandlerInternalOptions, "paths">;

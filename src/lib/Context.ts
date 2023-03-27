@@ -7,9 +7,10 @@ import {
 	ButtonInteraction,
 	AutocompleteInteraction,
 	MessageComponentInteraction,
+	ModalSubmitInteraction,
 } from "discord.js";
 
-export class InteractionContext<InteractionType extends Interaction, OnDM extends boolean = boolean> {
+export class AllInteractionContext<InteractionType extends Interaction, OnDM extends boolean = boolean> {
 	constructor(public readonly interaction: InteractionType) {}
 
 	get client() {
@@ -21,24 +22,49 @@ export class InteractionContext<InteractionType extends Interaction, OnDM extend
 	}
 }
 
-export class AutoCompleteContext<OnDM extends boolean = boolean> extends InteractionContext<AutocompleteInteraction, OnDM> {
+export class AutoCompleteContext<OnDM extends boolean = boolean> extends AllInteractionContext<AutocompleteInteraction, OnDM> {
 	respond(...args: FunctionParams<AutocompleteInteraction, "respond">): FunctionReturn<AutocompleteInteraction, "respond"> {
 		return this.interaction.respond(...args);
 	}
 }
 
-export class ChatInputCommandContext<OnDM extends boolean = boolean> extends InteractionContext<ChatInputCommandInteraction, OnDM> {
-	reply(...args: FunctionParams<ChatInputCommandInteraction, "reply">): FunctionReturn<ChatInputCommandInteraction, "reply"> {
-		return this.interaction.reply(...args);
+export class InteractionContext<
+	InteractionType extends Exclude<Interaction, AutocompleteInteraction>,
+	OnDM extends boolean = boolean,
+> extends AllInteractionContext<InteractionType, OnDM> {
+	reply(args: FunctionParams<InteractionType, "reply">[0]): FunctionReturn<Exclude<Interaction, AutocompleteInteraction>, "reply"> {
+		return this.interaction.reply(args);
 	}
 }
 
-export class ComponentContext<
+export class ChatInputCommandContext<OnDM extends boolean = boolean> extends InteractionContext<ChatInputCommandInteraction, OnDM> {
+	showModal(...args: FunctionParams<ChatInputCommandInteraction, "showModal">): FunctionReturn<ChatInputCommandInteraction, "showModal"> {
+		return this.interaction.showModal(...args);
+	}
+}
+
+export type SupportComponents = ModalSubmitInteraction | AnySelectMenuInteraction | ButtonInteraction;
+
+export class ComponentContext<InteractionType extends SupportComponents,> extends AllInteractionContext<InteractionType> {
+	get customId(): string {
+		return this.interaction.customId;
+	}
+
+	deferUpdate(...args: FunctionParams<SupportComponents, "deferUpdate">): FunctionReturn<SupportComponents, "deferUpdate"> {
+		return this.interaction.deferUpdate(...args);
+	}
+}
+
+export class MessageComponentContext<
 	InteractionType extends AnySelectMenuInteraction | ButtonInteraction,
-> extends InteractionContext<InteractionType> {
+> extends ComponentContext<InteractionType> {
 	update(...args: FunctionParams<MessageComponentInteraction, "update">): FunctionReturn<MessageComponentInteraction, "reply"> {
 		return this.interaction.update(...args);
 	}
+
+	showModal(...args: FunctionParams<MessageComponentInteraction, "showModal">): FunctionReturn<MessageComponentInteraction, "showModal"> {
+		return this.interaction.showModal(...args);
+	}
 }
 
-export class ButtonContext extends ComponentContext<ButtonInteraction> {}
+export class ModalComponentContext extends ComponentContext<ModalSubmitInteraction> {}

@@ -5,15 +5,15 @@ import { Util } from "../utils";
 
 export interface CommandContextStruct<DataType extends ApplicationCommandData> {
 	data: DataType;
-	execute: (interaction: ChatInputCommandContext<propertyIsTrue<DataType, "dmPermission">>) => Promise<void>;
+	execute: (context: ChatInputCommandContext<propertyIsTrue<DataType, "dmPermission">>) => Promise<void>;
 }
 
 export interface CommandStruct<DataType extends ApplicationCommandData> extends CommandContextStruct<DataType> {
-	onAutoComplete?: (interaction: AutoCompleteContext<propertyIsTrue<DataType, "dmPermission">>) => Promise<void>;
+	onAutoComplete?: (context: AutoCompleteContext<propertyIsTrue<DataType, "dmPermission">>) => Promise<void>;
 }
 
 export interface CommandWithSubStruct<DataType extends ChatCommandData> extends CommandStruct<DataType> {
-	onSub: (interaction: ChatInputCommandContext<propertyIsTrue<DataType, "dmPermission">>) => Promise<void>;
+	onSub: (context: ChatInputCommandContext<propertyIsTrue<DataType, "dmPermission">>) => Promise<void>;
 }
 
 export type ChatInputCommand = CommandStruct<ChatCommandData>;
@@ -22,9 +22,7 @@ export type ContextMenuCommand = CommandStruct<ContextCommandData>;
 
 export function createChatCommand<T extends ChatCommandData>(command: CommandWithSubStruct<T>): ChatInputCommand;
 export function createChatCommand<T extends ChatCommandData>(command: CommandStruct<T>): ChatInputCommand;
-export function createChatCommand<T extends ChatCommandData>(
-	command: CommandStruct<T> | CommandWithSubStruct<T>,
-): ChatInputCommand {
+export function createChatCommand<T extends ChatCommandData>(command: CommandStruct<T> | CommandWithSubStruct<T>): ChatInputCommand {
 	Util.chatCommandValidator(command);
 
 	return { ...command };

@@ -1,4 +1,4 @@
-import { AutoCompleteContext, ChatInputCommandContext } from "../index";
+import { AutoCompleteContext, ChatInputCommandContext, MessageComponentContext, ModalComponentContext } from "../index";
 import { createEvent } from "../lib/Events";
 
 export default {
@@ -27,6 +27,24 @@ export default {
 				if (!command || !command.caller.onAutoComplete) return;
 
 				return void (await command.caller.onAutoComplete(context));
+			}
+
+			if (interaction.isAnySelectMenu() || interaction.isButton()) {
+				const context = new MessageComponentContext(interaction);
+				const component = context.client.components.get(context.customId);
+
+				if (!component) return;
+
+				return void (await component.caller.execute(context));
+			}
+
+			if (interaction.isModalSubmit()) {
+				const context = new ModalComponentContext(interaction);
+				const modal = context.client.modals.get(context.customId);
+
+				if (!modal) return;
+
+				return void (await modal.caller.execute(context));
 			}
 
 			return;

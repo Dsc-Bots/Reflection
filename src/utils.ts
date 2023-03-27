@@ -1,7 +1,7 @@
 import { ClientEvents } from "discord.js";
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
-import { ChatCommandData, CommandStruct, CommandWithSubStruct, DiscordEvent, ComponentStruct } from "./index";
+import { ChatCommandData, CommandStruct, CommandWithSubStruct, DiscordEvent, MessageComponentStruct, ModalStruct } from "./index";
 
 export class Util {
 	static async walk(path: string, filter?: string): Promise<string[]> {
@@ -45,7 +45,7 @@ export class Util {
 		}
 	}
 
-	static discordComponentValidator(obj: ComponentStruct): void {
+	static discordComponentValidator(obj: MessageComponentStruct | ModalStruct): void {
 		if (obj.execute.length < 1) {
 			throw new Error(`El componente [${obj.customId}] tiene menos de 1 argumento en su funcion execute`);
 		}

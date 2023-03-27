@@ -1,6 +1,6 @@
 import { Client, ClientOptions } from "discord.js";
 import { join, resolve } from "node:path";
-import { ChatInputCommand, ComponentStruct, DiscordEvent } from "./lib/index";
+import { ChatInputCommand, MessageComponentStruct, DiscordEvent, ModalStruct } from "./lib/index";
 import { HandlingData, HandlerOptions, HandlerInternalOptions } from "./types";
 import { Util } from "./utils";
 
@@ -11,6 +11,7 @@ export class HandlerClient<Ready extends boolean = boolean> extends Client<Ready
 		this.hop = { paths, events: [] };
 		this.ChatInputCommands = new Map<string, HandlingData<ChatInputCommand>>();
 		this.components = new Map();
+		this.modals = new Map();
 	}
 
 	hop: HandlerInternalOptions;
@@ -20,6 +21,7 @@ export class HandlerClient<Ready extends boolean = boolean> extends Client<Ready
 		await this.loadChatCommands();
 		await this.loadComponents();
 		await this.loadEvents();
+		await this.loadModals();
 		await this.login(token);
 	}
 
@@ -48,12 +50,32 @@ export class HandlerClient<Ready extends boolean = boolean> extends Client<Ready
 		const files = await Util.walk(path, ".js");
 
 		for (const path of files) {
-			const caller = (await import(path)) as ComponentStruct;
+			const caller = (await import(path)) as MessageComponentStruct;
 			this.components.set(caller.customId, { path, caller });
 		}
 	}
 
+	private async loadModals(path?: string) {
+		if (!(path && this.hop.paths.modals)) {
+			return;
+		}
+
+		path ??= join(process.cwd(), this.hop.paths.modals);
+		if (!path.length) {
+			throw new Error("No se pueden cargar los modals sin un path");
+		}
+		const files = await Util.walk(path, ".js");
+
+		for (const path of files) {
+			const caller = (await import(path)) as ModalStruct;
+			this.modals.set(caller.customId, { path, caller });
+		}
+	}
+
 	private async loadEvents(path?: string, instance?: boolean) {
+		if (!(path && this.hop.paths.events)) {
+			return;
+		}
 		path ??= join(process.cwd(), this.hop.paths.events);
 		if (!path.length) {
 			throw new Error("No se pueden cargar los eventos sin un path");
@@ -85,6 +107,7 @@ export class HandlerClient<Ready extends boolean = boolean> extends Client<Ready
 declare module "discord.js" {
 	export interface Client {
 		ChatInputCommands: Map<string, HandlingData<ChatInputCommand>>;
-		components: Map<string, HandlingData<ComponentStruct>>;
+		components: Map<string, HandlingData<MessageComponentStruct>>;
+		modals: Map<string, HandlingData<ModalStruct>>;
 	}
 }
