@@ -1,12 +1,12 @@
 {
 	"compilerOptions": {
-		"outDir": "./dist",
-		"rootDir": "./src",
+		"rootDir": "lib",
 		"strict": true,
 		"forceConsistentCasingInFileNames": true,
 		"target": "ESNext",
-		"module": "CommonJS",
+		"moduleResolution": "node",
 		"declaration": true,
+		"module": "Node16",
 		"sourceMap": false,
 		"preserveConstEnums": true,
 		"skipLibCheck": true,
@@ -24,6 +24,6 @@
 		"**/dist"
 	],
 	"include": [
-		"**/src"
+		"**/lib"
 	]
 }

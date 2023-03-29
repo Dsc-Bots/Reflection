@@ -2,31 +2,16 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": false,
-			"correctness": {
-				"recommended": true,
-				"noUnusedVariables": "warn"
-			},
+			"all": true,
 			"style": {
-				"recommended": true,
-				"noNegationElse": "error",
-				"useShorthandArrayType": "error",
-				"useWhile": "off"
-			},
-			"suspicious": {
-				"recommended": true,
-				"noExplicitAny": "off"
+				"useBlockStatements": "off",
+				"noNonNullAssertion": "off"
 			},
 			"nursery": {
-				"recommended": true,
-				"noBannedTypes": "error",
-				"noConstructorReturn": "error",
-				"noVoidTypeReturn": "error",
-				"useCamelCase": "off",
-				"noDuplicateObjectKeys": "warn",
-				"noVar": "warn",
-				"useConst": "error",
-				"useNumericLiterals": "error"
+				"noParameterProperties": "off"
+			},
+			"suspicious": {
+				"noExplicitAny": "off"
 			}
 		}
 	},
@@ -34,7 +19,7 @@
 		"enabled": true,
 		"indentSize": 2,
 		"indentStyle": "tab",
-		"lineWidth": 140,
+		"lineWidth": 120,
 		"formatWithErrors": true
 	},
 	"files": {

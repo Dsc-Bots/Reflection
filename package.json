@@ -2,12 +2,13 @@
 	"name": "reflection",
 	"version": "1.0.0",
 	"description": "",
-	"main": "./dist/index.js",
+	"main": "./src/index.js",
+	"types": "./lib/index.d.ts",
 	"scripts": {
 		"lint": "rome format ./src --write",
 		"check": "rome check ./src --apply",
 		"build": "tsc --project tsconfig.json",
-		"comp": "swc ./src -d dist"
+		"comp": "swc ./lib -d ./lib"
 	},
 	"repository": {
 		"type": "git",
@@ -21,7 +22,8 @@
 	},
 	"homepage": "https://github.com/Dsc-Bots/Reflection#readme",
 	"dependencies": {
-		"discord.js": "^14.8.0"
+		"discord.js": "^14.8.0",
+		"dotenv": "^16.0.3"
 	},
 	"devDependencies": {
 		"@swc/cli": "^0.1.62",

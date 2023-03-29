@@ -1,5 +1,5 @@
 import { ClientEvents } from "discord.js";
-import { Util } from "../utils";
+import { Util } from "./utils";
 
 export interface DiscordEvent<Event extends keyof ClientEvents = keyof ClientEvents> {
 	name: Event;

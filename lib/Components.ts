@@ -1,15 +1,16 @@
-import { AnySelectMenuInteraction, ButtonInteraction } from "discord.js";
-import { Util } from "../utils";
-import { MessageComponentContext, ModalComponentContext } from "./index";
+import { AnySelectMenuInteraction, ButtonInteraction, ModalSubmitInteraction } from "discord.js";
+import { Util } from "./utils";
 
-export interface MessageComponentStruct<T extends AnySelectMenuInteraction | ButtonInteraction = AnySelectMenuInteraction | ButtonInteraction> {
+export interface MessageComponentStruct<
+	T extends AnySelectMenuInteraction | ButtonInteraction = AnySelectMenuInteraction | ButtonInteraction,
+> {
 	customId: string;
-	execute: (context: MessageComponentContext<T>) => Promise<void>;
+	execute: (context: T) => Promise<void>;
 }
 
 export interface ModalStruct {
 	customId: string;
-	execute: (context: ModalComponentContext) => Promise<void>;
+	execute: (context: ModalSubmitInteraction) => Promise<void>;
 }
 
 export function createComponent<T extends MessageComponentStruct<ButtonInteraction>>(data: T): T;
