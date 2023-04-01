@@ -1,8 +1,10 @@
 {
 	"compilerOptions": {
-		"rootDir": "lib",
+		"rootDir": "__lib__",
+		"outFile": "./lib/index.d.ts",
 		"strict": true,
 		"forceConsistentCasingInFileNames": true,
+		"emitDeclarationOnly": true,
 		"target": "ESNext",
 		"moduleResolution": "node",
 		"declaration": true,
@@ -24,6 +26,6 @@
 		"**/dist"
 	],
 	"include": [
-		"**/lib"
+		"**/__lib__"
 	]
 }
