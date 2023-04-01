@@ -2,6 +2,8 @@
 node_modules/
 dist/
 __test__/
-.swcrc
-tsconfig.json
+types/
+tsconfig.main.json
+tsconfig.types.json
 __lib__/
+.env

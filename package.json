@@ -2,13 +2,14 @@
 	"name": "reflection",
 	"version": "1.0.0",
 	"description": "",
-	"main": "./src/index.js",
-	"types": "./lib/index.d.ts",
+	"main": "index.js",
+	"types": "./lib/mod.d.ts",
 	"scripts": {
 		"lint": "rome format ./src --write",
 		"check": "rome check ./src --apply",
-		"build": "tsc --project tsconfig.json",
-		"comp": "swc ./__lib__ -o ./lib/index.js"
+		"build": "tsc --project tsconfig.main.json",
+		"types": "tsc --project tsconfig.types.json",
+		"comp": "swc ./__lib__ -d ./lib"
 	},
 	"repository": {
 		"type": "git",

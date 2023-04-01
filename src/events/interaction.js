@@ -9,7 +9,7 @@ module.exports = createEvent({
 
 		if (interaction.isChatInputCommand()) {
 			const command = client.chatInputCommands.get(commandName);
-			const sub = options.getSubcommand();
+			const sub = options.getSubcommand(false);
 
 			if (!command) return;
 
